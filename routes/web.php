@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 //!-- Import Model so we can take users
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,13 +26,18 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('dashboard', function () {
         // !take a data
-        $users = User::all();
+        //? $users = User::all();
         // !Compact is use for to pass the data from $users to dashboard route
+        // ? and we can use another way like below
+        $users = DB::table('users')->get();
         return view('dashboard', compact('users'));
     })->name('dashboard');
 });
+
+Route::get('category/all', [CategoryController::class, 'allCat'])->name('all.category');
+Route::post('category/add', [CategoryController::class, 'store'])->name('store.category');
 
 Route::get('about', function () {
     return view('about');
