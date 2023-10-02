@@ -30,10 +30,13 @@
                                 <tr class="hover:bg-gray-300 rounded-b-md">
                                     <td class="px-6 py-4">{{ $categories->firstItem() + $loop->index }}</td>
                                     <td class="px-6 py-4">{{ $data->category_name }}</td>
-                                    <td class="px-6 py-4">{{ $data->user->name }}</td>
+                                    {{-- * ORM --}}
+                                    {{-- <td class="px-6 py-4">{{ $data->user->name }}</td> --}}
+                                    {{-- * Query Builder --}}
+                                    <td class="px-6 py-4"> {{ $data->name }}</td>
                                     <td class="px-6 py-4">
                                         @if ($data->created_at === null)
-                                            <span class="text-red-600">No Data SetS</span>
+                                            <span class="text-red-600">No Data Set</span>
                                         @else
                                             {{ Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
                                         @endif
@@ -43,9 +46,11 @@
                             </tbody>
                         @endforeach
                     </table>
-                    {{ $categories->links() }}
+                    <div class="px-2 py-2">
+                        {{ $categories->links() }}
+                    </div>
                 </div>
-                <div class="max-w-md p-6 bg-white rounded-lg shadow-md flex-1 mx-2 w-auto">
+                <div class="max-w-md p-6 bg-white rounded-lg shadow-md flex-1 mx-2 w-auto h-1/2">
                     <h5 class="text-md font-semibold mb-4">Add Category</h5>
                     <hr>
                     <form action="{{ route('store.category') }}" method="POST" class="w-full">

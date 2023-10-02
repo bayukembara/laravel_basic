@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,9 +18,14 @@ class CategoryController extends Controller
     public function allCat()
     {
 // ? ORM
-        $categories = Category::latest()->paginate();
+        // $categories = Category::latest()->paginate(5);
 // ? Query Builder
         // $categories = DB::table('categories')->latest()->paginate(5);
+// * Query Builder for relationship table between user and category using query builder
+        $categories = DB::table('categories')
+            ->join('users', 'categories.user_id', 'users.id')
+            ->select('categories.*', 'users.name')
+            ->latest()->paginate(5);
         return view('admin.category.index', compact('categories'));
     }
 
