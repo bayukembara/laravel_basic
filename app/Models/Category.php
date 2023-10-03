@@ -15,9 +15,9 @@ class Category extends Model
     ];
 
     // * this function is used for to make a relationship between the user table and category table
-    // public function user()
-    // {
-    //     // & ORM
-    //     return $this->hasOne(User::class, 'id', 'user_id');
-    // }
+    public function user()
+    {
+        // & ORM
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

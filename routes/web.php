@@ -38,6 +38,11 @@ Route::middleware([
 
 Route::get('category/all', [CategoryController::class, 'allCat'])->name('all.category');
 Route::post('category/add', [CategoryController::class, 'store'])->name('store.category');
+// & ORM
+// * Load the data to the form
+Route::get('category/edit/{id}', [CategoryController::class, 'edit']);
+// * Route to update the data from the edit
+Route::post('category/update/{id}', [CategoryController::class, 'update'])->name('update.category');
 
 Route::get('about', function () {
     return view('about');

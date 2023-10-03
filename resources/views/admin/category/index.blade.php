@@ -21,7 +21,8 @@
                                 <th class="px-6 py-3 bg-blue-400 rounded-tl-md">SL No</th>
                                 <th class="px-6 py-3 bg-blue-400 ">Category Name</th>
                                 <th class="px-6 py-3 bg-blue-400 ">User</th>
-                                <th class="px-6 py-3 bg-blue-400 rounded-tr-md">Created At</th>
+                                <th class="px-6 py-3 bg-blue-400">Created At</th>
+                                <th class="px-6 py-3 bg-blue-400 text-center rounded-tr-md">Action</th>
                             </tr>
                         </thead>
                         {{-- @php($i = 1) --}}
@@ -31,9 +32,10 @@
                                     <td class="px-6 py-4">{{ $categories->firstItem() + $loop->index }}</td>
                                     <td class="px-6 py-4">{{ $data->category_name }}</td>
                                     {{-- * ORM --}}
-                                    {{-- <td class="px-6 py-4">{{ $data->user->name }}</td> --}}
+                                    <td class="px-6 py-4">{{ $data->user->name }}</td>
                                     {{-- * Query Builder --}}
-                                    <td class="px-6 py-4"> {{ $data->name }}</td>
+                                    {{-- <td class="px-6 py-4"> {{ $data->name }}</td> --}}
+                                    {{-- * Other Part --}}
                                     <td class="px-6 py-4">
                                         @if ($data->created_at === null)
                                             <span class="text-red-600">No Data Set</span>
@@ -42,6 +44,12 @@
                                         @endif
                                     </td>
                                     {{-- * <td class="px-6 py-4">{{ $data->created_at->diffForHumans() }}</td> --}}
+                                    <td class="px-1 py-4 flex justify-center">
+                                        <a href="{{ url('category/edit/' . $data->id) }}"
+                                            class="py-2 px-2 bg-blue-400 text-decoration-none text-black rounded-md mr-2">Edit</a>
+                                        <a href=""
+                                            class="py-2 px-2 bg-red-400 text-decoration-none text-black rounded-md">Delete</a>
+                                    </td>
                                 </tr>
                             </tbody>
                         @endforeach

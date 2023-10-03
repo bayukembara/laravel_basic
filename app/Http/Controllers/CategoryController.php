@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,14 +19,14 @@ class CategoryController extends Controller
     public function allCat()
     {
 // ? ORM
-        // $categories = Category::latest()->paginate(5);
+        $categories = Category::latest()->paginate(5);
 // ? Query Builder
         // $categories = DB::table('categories')->latest()->paginate(5);
 // * Query Builder for relationship table between user and category using query builder
-        $categories = DB::table('categories')
-            ->join('users', 'categories.user_id', 'users.id')
-            ->select('categories.*', 'users.name')
-            ->latest()->paginate(5);
+        // $categories = DB::table('categories')
+        //     ->join('users', 'categories.user_id', 'users.id')
+        //     ->select('categories.*', 'users.name')
+        //     ->latest()->paginate(5);
         return view('admin.category.index', compact('categories'));
     }
 
@@ -103,7 +104,12 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        //* ORM QUERY
+        // $categories = Category::find($id);
+        // * QUERY BUILDER
+        $categories = DB::table('categories')->where('id', $id)->first();
+
+        return view('admin.category.edit', compact('categories'));
     }
 
     /**
@@ -115,7 +121,30 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validateData = $request->validate([
+            'category_name' => 'required|unique:categories|max:50|regex:/^[a-zA-Z0-9 _]*$/',
+        ],
+            [
+                'category_name.required' => 'Please input category name',
+                'category_name.max'      => 'Category name length less than 50 characters.',
+                'category_name.regex'    => 'Must contain alphabet and numeric only',
+            ]
+        );
+// * ORM QUERY
+        // $update = Category::find($id)->update([
+        //     'category_name' => $request->category_name,
+        //     'user_id'       => Auth::user()->id,
+        // ]);
+// * QUERY BUILDER
+
+        $data = ([
+            'category_name' => $request->category_name,
+            'user_id'       => Auth::user()->id,
+        ]);
+
+        DB::table('categories')->where('id', $id)->update($data);
+
+        return Redirect()->route('all.category')->with('success', 'Category has been updated successfully');
     }
 
     /**
