@@ -14,7 +14,15 @@
                             <p class="px-3 py-3 text-white" role="alert" id="session-alert">{{ session('success') }}</p>
                         </div>
                     @endif
+                    @if (session('permdelete'))
+                        <div class="w-full bg-red-500 text-center rounded-xl opacity-70">
+                            <p class="px-3 py-3 text-white" role="alert" id="session-alert">
+                                {{ session('permdelete') }}
+                            </p>
+                        </div>
+                    @endif
                     <h5 class="text-md font-semibold mb-4">All Category</h5>
+                    {{-- ! ALL CATEGORIES --}}
                     <table class="w-full whitespace-no-wrap bg-white shadow-md rounded table-auto">
                         <thead>
                             <tr class="text-left font-semibold">
@@ -47,7 +55,7 @@
                                     <td class="px-1 py-4 flex justify-center">
                                         <a href="{{ url('category/edit/' . $data->id) }}"
                                             class="py-2 px-2 bg-blue-400 text-decoration-none text-black rounded-md mr-2">Edit</a>
-                                        <a href=""
+                                        <a href="{{ url('category/softdelete/' . $data->id) }}"
                                             class="py-2 px-2 bg-red-400 text-decoration-none text-black rounded-md">Delete</a>
                                     </td>
                                 </tr>
@@ -56,6 +64,51 @@
                     </table>
                     <div class="px-2 py-2">
                         {{ $categories->links() }}
+                    </div>
+                    {{-- ! ALL TRASHED CATEGORIES --}}
+                    <h5 class="text-md font-semibold mb-4">Trash Category</h5>
+                    <table class="w-full whitespace-no-wrap bg-white shadow-md rounded table-auto">
+                        <thead>
+                            <tr class="text-left font-semibold">
+                                <th class="px-6 py-3 bg-blue-400 rounded-tl-md">SL No</th>
+                                <th class="px-6 py-3 bg-blue-400 ">Category Name</th>
+                                <th class="px-6 py-3 bg-blue-400 ">User</th>
+                                <th class="px-6 py-3 bg-blue-400">Created At</th>
+                                <th class="px-6 py-3 bg-blue-400 text-center rounded-tr-md">Action</th>
+                            </tr>
+                        </thead>
+                        {{-- @php($i = 1) --}}
+                        @foreach ($trashCat as $data)
+                            <tbody>
+                                <tr class="hover:bg-gray-300 rounded-b-md">
+                                    <td class="px-6 py-4">{{ $categories->firstItem() + $loop->index }}</td>
+                                    <td class="px-6 py-4">{{ $data->category_name }}</td>
+                                    {{-- * ORM --}}
+                                    <td class="px-6 py-4">{{ $data->user->name }}</td>
+                                    {{-- * Query Builder --}}
+                                    {{-- <td class="px-6 py-4"> {{ $data->name }}</td> --}}
+                                    {{-- * Other Part --}}
+                                    <td class="px-6 py-4">
+                                        @if ($data->created_at === null)
+                                            <span class="text-red-600">No Data Set</span>
+                                        @else
+                                            {{ Carbon\Carbon::parse($data->created_at)->diffForHumans() }}
+                                        @endif
+                                    </td>
+                                    {{-- * <td class="px-6 py-4">{{ $data->created_at->diffForHumans() }}</td> --}}
+                                    <td class="px-1 py-4 flex justify-center">
+                                        <a href="{{ url('category/restore/' . $data->id) }}"
+                                            class="py-2 px-2 bg-blue-400 text-decoration-none text-black rounded-md mr-2">Restore</a>
+                                        <a href="{{ url('category/permdelete/' . $data->id) }}"
+                                            class="py-2 px-2 bg-red-400 text-decoration-none text-black rounded-md mr-2">Perm
+                                            Delete</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        @endforeach
+                    </table>
+                    <div class="px-2 py-2">
+                        {{ $trashCat->links() }}
                     </div>
                 </div>
                 <div class="max-w-md p-6 bg-white rounded-lg shadow-md flex-1 mx-2 w-auto h-1/2">

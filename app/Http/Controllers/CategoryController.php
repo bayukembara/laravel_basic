@@ -20,6 +20,8 @@ class CategoryController extends Controller
     {
 // ? ORM
         $categories = Category::latest()->paginate(5);
+// & get deleted Data using ORM
+        $trashCat = Category::onlyTrashed()->latest()->paginate(5);
 // ? Query Builder
         // $categories = DB::table('categories')->latest()->paginate(5);
 // * Query Builder for relationship table between user and category using query builder
@@ -27,7 +29,7 @@ class CategoryController extends Controller
         //     ->join('users', 'categories.user_id', 'users.id')
         //     ->select('categories.*', 'users.name')
         //     ->latest()->paginate(5);
-        return view('admin.category.index', compact('categories'));
+        return view('admin.category.index', compact('categories', 'trashCat'));
     }
 
     /**
@@ -156,5 +158,24 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function softdelete($id)
+    {
+        $delete = Category::find($id)->delete();
+        return Redirect()->back()->with('success', 'Category has been soft deleted successfully');
+    }
+
+    public function restore($id)
+    {
+        $restore = Category::withTrashed()->find($id)->restore();
+        return Redirect()->back()->with('success', 'Category has been restored successfully');
+
+    }
+
+    public function permdelete($id)
+    {
+        $permdelete = Category::onlyTrashed()->find($id)->forceDelete();
+        return Redirect()->back()->with('permdelete', 'Category has been permanently deleted sucessfully');
     }
 }

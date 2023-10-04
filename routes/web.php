@@ -41,6 +41,9 @@ Route::post('category/add', [CategoryController::class, 'store'])->name('store.c
 // & ORM
 // * Load the data to the form
 Route::get('category/edit/{id}', [CategoryController::class, 'edit']);
+Route::get('category/softdelete/{id}', [CategoryController::class, 'softdelete']);
+Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
+Route::get('category/permdelete/{id}', [CategoryController::class, 'permdelete']);
 // * Route to update the data from the edit
 Route::post('category/update/{id}', [CategoryController::class, 'update'])->name('update.category');
 
