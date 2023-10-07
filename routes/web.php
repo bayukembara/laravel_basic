@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 //!-- Import Model so we can take users
@@ -36,6 +37,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
+// * Category Route
 Route::get('category/all', [CategoryController::class, 'allCat'])->name('all.category');
 Route::post('category/add', [CategoryController::class, 'store'])->name('store.category');
 // & ORM
@@ -46,6 +48,10 @@ Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
 Route::get('category/permdelete/{id}', [CategoryController::class, 'permdelete']);
 // * Route to update the data from the edit
 Route::post('category/update/{id}', [CategoryController::class, 'update'])->name('update.category');
+
+// *Brand Route
+Route::get('brand/all', [BrandController::class, 'index'])->name('all.brand');
+Route::post('brand/add', [BrandController::class, 'store'])->name('store.brand');
 
 Route::get('about', function () {
     return view('about');

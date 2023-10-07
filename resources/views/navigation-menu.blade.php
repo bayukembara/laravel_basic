@@ -18,6 +18,9 @@
                     <x-nav-link href="{{ route('all.category') }}" :active="request()->routeIs('all.category')">
                         All Category
                     </x-nav-link>
+                    <x-nav-link href="{{ route('all.brand') }}" :active="request()->routeIs('all.brand')">
+                        All Brand
+                    </x-nav-link>
                 </div>
             </div>
 

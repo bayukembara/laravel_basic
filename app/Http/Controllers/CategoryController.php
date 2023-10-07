@@ -55,7 +55,7 @@ class CategoryController extends Controller
         ],
             [
                 'category_name.required' => 'Please input category name',
-                'category_name.max'      => 'Category name length less than 10 characters.',
+                'category_name.max'      => 'Category name length less than 50 characters.',
                 'category_name.regex'    => 'Must contain alphabet and numeric only',
             ]
         );
