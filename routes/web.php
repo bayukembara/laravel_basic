@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BrandController;
 //!-- Import Model so we can take users
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,17 @@ Route::middleware([
 
 Route::get('category/all', [CategoryController::class, 'allCat'])->name('all.category');
 Route::post('category/add', [CategoryController::class, 'store'])->name('store.category');
+Route::get('category/edit/{id}', [CategoryController::class, 'edit'])->name('edit.category');
+Route::post('category/update/{id}', [CategoryController::class, 'update'])->name('update.category');
+Route::get('category/delete/{id}', [CategoryController::class, 'destroy'])->name('deletesoft.category');
+Route::get('category/restore/{id}', [CategoryController::class, 'restore'])->name('restore.category');
+Route::get('category/permdelete/{id}', [CategoryController::class, 'destroyPermanent'])->name('dpermanent.category');
+
+Route::get('brand/all', [BrandController::class, 'index'])->name('all.brand');
+Route::post('brand/add', [BrandController::class, 'store'])->name('store.brand');
+Route::get('brand/edit/{id}', [CategoryController::class, 'edit'])->name('edit.brand');
+Route::get('brand/delete/{id}', [CategoryController::class, 'edit'])->name('deletesoft.brand');
+
 
 Route::get('about', function () {
     return view('about');

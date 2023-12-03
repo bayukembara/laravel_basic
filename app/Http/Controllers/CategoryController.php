@@ -19,10 +19,31 @@ class CategoryController extends Controller
     public function allCat()
     {
 // ? ORM
-        $categories = Category::latest()->paginate();
+        $data = [
+            'categories' => Category::latest()->paginate(5),
+            'title' => 'Categories',
+            // ? Trash Categories
+            'trashCat' => Category::onlyTrashed()->latest()->paginate(3),
+        ];
+
+        // $categories = Category::latest()->paginate();
+        // $title = "Categories";
 // ? Query Builder
         // $categories = DB::table('categories')->latest()->paginate(5);
-        return view('admin.category.index', compact('categories'));
+
+        // ? Join Query
+        // $data = [
+        //     'categories' => DB::table('categories')
+        //                     ->join('users', 'categories.user_id', 'users.id')
+        //                     ->select('categories.*', 'users.name')
+        //                     ->latest()
+        //                     ->paginate(5),
+        //     'title' => 'Categories',
+        // ];
+
+
+
+        return view('admin.category.index', $data);
     }
 
     /**
@@ -44,11 +65,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'category_name' => 'required|unique:categories|max:50|regex:/^[a-zA-Z0-9 _]*$/',
+            'category_name' => 'required|unique:categories|min:3|regex:/^[a-zA-Z0-9 _]*$/',
         ],
             [
                 'category_name.required' => 'Please input category name',
-                'category_name.max'      => 'Category name length less than 10 characters.',
+                'category_name.min'      => 'Category name length less than :min characters.',
                 'category_name.regex'    => 'Must contain alphabet and numeric only',
             ]
         );
@@ -99,7 +120,14 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = [
+            // & ORM
+            // 'categories' => Category::find($id),
+            // & Query
+            'categories' => DB::table('categories')->where('id',$id)->first(),
+            'title' => 'Edit Category',
+        ];
+        return view('admin.category.edit',$data);
     }
 
     /**
@@ -111,7 +139,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // & ORM
+        // $update = Category::find($id)->update([
+        //     'category_name' => $request->category_name,
+        //     'user_id' => Auth::user()->id,
+        // ]);
+
+        // & Query
+
+        $data = [
+            'category_name' => $request->category_name,
+            'user_id' => Auth::user()->id,
+        ];
+        DB::table('categories')->where('id', $id)->update($data);
+
+        return Redirect()->route('all.category')->with('success', 'Category Edited Successfully');
     }
 
     /**
@@ -122,6 +164,17 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $softDelete = Category::find($id)->delete();
+        return Redirect()->back()->with('success','Category Deleted Successfully');
+    }
+
+    public function restore($id){
+        $restore = Category::withTrashed()->find($id)->restore();
+        return redirect()->back()->with('success','Category Restored Successfully');
+    }
+
+    public function destroyPermanent($id){
+        $permDelete = Category::onlyTrashed()->find($id)->forceDelete();
+        return redirect()->back()->with('success', 'Category Deleted Permanently');
     }
 }
