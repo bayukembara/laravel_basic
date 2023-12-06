@@ -47,8 +47,9 @@ Route::get('category/permdelete/{id}', [CategoryController::class, 'destroyPerma
 
 Route::get('brand/all', [BrandController::class, 'index'])->name('all.brand');
 Route::post('brand/add', [BrandController::class, 'store'])->name('store.brand');
-Route::get('brand/edit/{id}', [CategoryController::class, 'edit'])->name('edit.brand');
-Route::get('brand/delete/{id}', [CategoryController::class, 'edit'])->name('deletesoft.brand');
+Route::get('brand/edit/{id}', [BrandController::class, 'edit'])->name('edit.brand');
+Route::post('brands/update/{id}', [BrandController::class, 'update'])->name('update.brand');
+Route::get('brand/delete/{id}', [BrandController::class, 'destroy'])->name('delete.brand');
 
 
 Route::get('about', function () {
